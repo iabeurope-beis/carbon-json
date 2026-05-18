@@ -1,0 +1,55 @@
+name: Implementation question
+description: Ask how to interpret the public-feedback draft for a practical implementation.
+title: "[Implementation question]: "
+labels:
+  - implementation-question
+body:
+  - type: textarea
+    id: implementation_context
+    attributes:
+      label: Implementation context
+      description: Describe the system, reporting period, and disclosure scope at a high level.
+    validations:
+      required: true
+  - type: dropdown
+    id: deployment_type
+    attributes:
+      label: Deployment type
+      options:
+        - Owned or operated data center
+        - Leased data center
+        - Colocation
+        - Public cloud or hosted infrastructure
+        - Edge infrastructure
+        - Mixed deployment
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: State the implementation question.
+    validations:
+      required: true
+  - type: input
+    id: relevant_section
+    attributes:
+      label: Relevant section
+      placeholder: "specification.md Section 15.3"
+    validations:
+      required: false
+  - type: textarea
+    id: data_availability
+    attributes:
+      label: Data availability
+      description: Describe what data is available and what data is missing.
+    validations:
+      required: false
+  - type: textarea
+    id: proposed_interpretation
+    attributes:
+      label: Proposed interpretation
+      description: Explain how you think the draft should be applied.
+    validations:
+      required: false

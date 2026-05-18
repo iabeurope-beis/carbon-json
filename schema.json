@@ -1,0 +1,862 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://iabeurope-beis.github.io/carbon-json/schemas/carbon-json-v1.schema.json",
+  "title": "carbon.json v1.0 public-feedback draft",
+  "description": "Provider-neutral JSON Schema for machine-readable carbon-intensity disclosure by digital advertising system infrastructure.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "info",
+    "reporter",
+    "functional_unit",
+    "results",
+    "method",
+    "quality"
+  ],
+  "properties": {
+    "info": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "spec_version",
+        "published_at",
+        "record_version",
+        "reporting_period"
+      ],
+      "properties": {
+        "profile": {
+          "type": "string",
+          "const": "carbon.json",
+          "description": "Identifies the file as a carbon.json disclosure."
+        },
+        "spec_version": {
+          "type": "string",
+          "const": "1.0.0-public-feedback",
+          "description": "Version identifier for the v1.0 public-feedback draft."
+        },
+        "published_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when this disclosure record was published."
+        },
+        "record_version": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Monotonic version number for this disclosure record."
+        },
+        "reporting_period": {
+          "$ref": "#/definitions/reportingPeriod"
+        },
+        "supersedes": {
+          "type": "string",
+          "description": "Optional identifier or URL for the record superseded by this record."
+        },
+        "recast_of_periods": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^\\d{4}(-\\d{2})?$"
+          },
+          "uniqueItems": true,
+          "description": "Reporting periods recast by this disclosure, expressed as YYYY or YYYY-MM."
+        }
+      }
+    },
+    "reporter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "legal_entity",
+        "service_name",
+        "service_variant",
+        "node_class",
+        "deployment_archetype",
+        "geography_scope"
+      ],
+      "properties": {
+        "legal_entity": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Legal entity responsible for the disclosure."
+        },
+        "service_name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Name of the disclosed service or system."
+        },
+        "service_variant": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Service variant covered by the disclosure."
+        },
+        "node_class": {
+          "type": "string",
+          "enum": [
+            "DSP",
+            "SSP",
+            "Exchange",
+            "AdServer",
+            "PublisherMonetizationPlatform",
+            "MeasurementOrVerification",
+            "Other"
+          ],
+          "description": "Functional class of the disclosed advertising system."
+        },
+        "node_class_other": {
+          "type": "string",
+          "description": "Required when node_class is Other."
+        },
+        "deployment_archetype": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "owned_operated_dc",
+              "leased_dc",
+              "colocation",
+              "public_cloud",
+              "edge_network"
+            ]
+          },
+          "description": "Deployment archetypes used by the disclosed service."
+        },
+        "cloud_providers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "description": "Public cloud provider names, cloud service providers, or provider categories used as source inputs, where applicable."
+        },
+        "geography_scope": {
+          "type": "string",
+          "enum": [
+            "global",
+            "regional"
+          ],
+          "description": "Whether the disclosure is global or specific to listed regions."
+        },
+        "regions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "description": "Regions covered when geography_scope is regional."
+        },
+        "public_endpoint": {
+          "type": "string",
+          "format": "uri",
+          "description": "Stable public URL for the disclosure, if available."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "node_class": {
+                "const": "Other"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "node_class_other"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "deployment_archetype": {
+                "contains": {
+                  "const": "public_cloud"
+                }
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "cloud_providers"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "geography_scope": {
+                "const": "regional"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "regions"
+            ]
+          }
+        }
+      ]
+    },
+    "functional_unit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unit",
+        "denominator_type",
+        "denominator_count"
+      ],
+      "properties": {
+        "unit": {
+          "type": "string",
+          "const": "kg CO2e per 1000 impressions",
+          "description": "Mandatory functional unit for the core metric."
+        },
+        "denominator_type": {
+          "type": "string",
+          "enum": [
+            "reconciled_delivered_impressions",
+            "winning_events_times_trailing_settled_ratio",
+            "billable_impressions",
+            "winning_events"
+          ],
+          "description": "Denominator source used for attributable delivered impressions."
+        },
+        "denominator_count": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Attributable delivered impressions or permitted denominator fallback count."
+        }
+      }
+    },
+    "results": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "location_based_gross_core"
+      ],
+      "properties": {
+        "location_based_gross_core": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "raw_value",
+            "published_value",
+            "absolute_emissions_kgco2e",
+            "intensity_breakdown_kgco2e_per_1000_impressions"
+          ],
+          "properties": {
+            "raw_value": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Raw core intensity before uncertainty buffer."
+            },
+            "published_value": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Core intensity after applying the required uncertainty buffer."
+            },
+            "absolute_emissions_kgco2e": {
+              "$ref": "#/definitions/breakdownAbs"
+            },
+            "intensity_breakdown_kgco2e_per_1000_impressions": {
+              "$ref": "#/definitions/breakdownIntensity"
+            }
+          }
+        },
+        "supplemental": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "market_based_total": {
+              "$ref": "#/definitions/supplementalMetric"
+            },
+            "end_of_life": {
+              "$ref": "#/definitions/supplementalMetric"
+            }
+          },
+          "description": "Optional non-comparable supplemental metrics kept separate from the core metric."
+        }
+      }
+    },
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "standard_refs",
+        "boundary",
+        "included_categories",
+        "excluded_categories",
+        "excluded_emissions_percent",
+        "allocation_methods",
+        "pue",
+        "grid_factors",
+        "amortization_lives_years",
+        "source_coverage_note"
+      ],
+      "properties": {
+        "standard_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Accounting standards, methods, or internal controls used as source references."
+        },
+        "boundary": {
+          "type": "string",
+          "const": "cradle-to-gate ad system infrastructure",
+          "description": "Core boundary for the disclosure."
+        },
+        "included_categories": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "servers",
+              "accelerators",
+              "storage",
+              "networking",
+              "backup_power",
+              "power_distribution",
+              "cooling_mechanical",
+              "building_shell",
+              "edge_sites"
+            ]
+          },
+          "description": "Infrastructure categories included in the disclosed core boundary."
+        },
+        "excluded_categories": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "market_based_electricity",
+              "offsets_and_removals",
+              "end_of_life",
+              "corporate_overhead",
+              "offices",
+              "warehouses",
+              "employee_travel",
+              "software_development",
+              "r_and_d",
+              "end_user_devices",
+              "open_internet_not_operated",
+              "non_advertising_business_activities",
+              "other"
+            ]
+          },
+          "description": "Categories excluded from the core metric."
+        },
+        "excluded_emissions_percent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 5,
+          "description": "Estimated omitted in-scope emissions as a percentage of raw core emissions."
+        },
+        "allocation_methods": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "compute",
+            "facility_overhead",
+            "shared_services"
+          ],
+          "properties": {
+            "compute": {
+              "type": "string",
+              "enum": [
+                "direct_assignment",
+                "cpu_time_plus_idle_capacity",
+                "instance_hours_plus_reserved_capacity",
+                "rack_power_and_capacity",
+                "customer_account_usage",
+                "other"
+              ]
+            },
+            "facility_overhead": {
+              "type": "string",
+              "enum": [
+                "billed_total_energy",
+                "it_energy",
+                "provisioned_kw",
+                "rack_power_draw",
+                "provider_embedded",
+                "default_pue",
+                "other"
+              ]
+            },
+            "shared_services": {
+              "type": "string",
+              "enum": [
+                "direct_usage",
+                "api_calls_then_cost_for_residual",
+                "bytes_processed_then_cost_for_residual",
+                "transactions_then_cost_for_residual",
+                "economic_residual_only",
+                "other"
+              ]
+            }
+          },
+          "description": "Dominant allocation methods for major shared or indirect categories."
+        },
+        "pue": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode"
+          ],
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "measured_iso30134_2",
+                "provider_embedded",
+                "billed_total_energy_no_pue_needed",
+                "default_conservative"
+              ]
+            },
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 1
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "mode": {
+                    "enum": [
+                      "measured_iso30134_2",
+                      "default_conservative"
+                    ]
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "value"
+                ]
+              }
+            }
+          ],
+          "description": "PUE treatment used to include facility overhead exactly once."
+        },
+        "grid_factors": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "accounting_method",
+            "scope2_generation_temporal_resolution",
+            "fera_temporal_resolution",
+            "scope2_generation_source",
+            "fera_source"
+          ],
+          "properties": {
+            "accounting_method": {
+              "type": "string",
+              "const": "location_based_generation_and_fera_for_core"
+            },
+            "scope2_generation_temporal_resolution": {
+              "type": "string",
+              "enum": [
+                "hourly",
+                "daily",
+                "monthly",
+                "annual"
+              ]
+            },
+            "fera_temporal_resolution": {
+              "type": "string",
+              "enum": [
+                "hourly",
+                "daily",
+                "monthly",
+                "annual"
+              ]
+            },
+            "scope2_generation_source": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fera_source": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "description": "Source and temporal resolution of location-based Scope 2 generation and FERA factors."
+        },
+        "amortization_lives_years": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "it_equipment",
+            "shared_network",
+            "facility_shortlife",
+            "facility_longlife",
+            "building_shell",
+            "combined_facility_default"
+          ],
+          "properties": {
+            "it_equipment": {
+              "type": "number",
+              "const": 4
+            },
+            "shared_network": {
+              "type": "number",
+              "const": 5
+            },
+            "facility_shortlife": {
+              "type": "number",
+              "const": 15
+            },
+            "facility_longlife": {
+              "type": "number",
+              "const": 20
+            },
+            "building_shell": {
+              "type": "number",
+              "const": 25
+            },
+            "combined_facility_default": {
+              "type": "number",
+              "const": 20
+            }
+          },
+          "description": "Service lives used to normalize embodied emissions."
+        },
+        "source_coverage_note": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Concise explanation of source coverage, gaps, and treatment of incomplete data."
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_data_share_percent",
+        "quality_tier",
+        "uncertainty_buffer_percent"
+      ],
+      "properties": {
+        "primary_data_share_percent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Emissions-weighted share of raw core emissions covered by primary or provider-specific data."
+        },
+        "quality_tier": {
+          "type": "string",
+          "enum": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "description": "Overall data-quality tier after applying the lowest triggered tier."
+        },
+        "uncertainty_buffer_percent": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Buffer applied to convert raw value to published value."
+        },
+        "dqi": {
+          "$ref": "#/definitions/dqi"
+        }
+      }
+    },
+    "assurance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assurance"
+      ],
+      "properties": {
+        "assurance": {
+          "type": "boolean"
+        },
+        "level": {
+          "type": "string",
+          "enum": [
+            "limited",
+            "reasonable"
+          ]
+        },
+        "boundary": {
+          "type": "string",
+          "enum": [
+            "Cradle-to-Gate"
+          ]
+        },
+        "provider_name": {
+          "type": "string"
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "standard_name": {
+          "type": "string"
+        },
+        "comments": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "assurance": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "level",
+              "boundary",
+              "provider_name"
+            ]
+          }
+        }
+      ]
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "offsets_applied"
+      ],
+      "properties": {
+        "offsets_applied": {
+          "type": "boolean",
+          "description": "Whether offsets are claimed outside the core metric."
+        },
+        "offsets_note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "market_based_instruments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "offset_programs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "evidence_links": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "uniqueItems": true
+        }
+      }
+    }
+  },
+  "definitions": {
+    "reportingPeriod": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "start",
+        "end"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "annual",
+            "monthly"
+          ]
+        },
+        "start": {
+          "type": "string",
+          "format": "date"
+        },
+        "end": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "breakdownAbs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total",
+        "scope1_direct",
+        "scope2_location_based_generation",
+        "scope3_fera_location_based",
+        "embodied_it_and_network_normalized",
+        "embodied_facility_normalized"
+      ],
+      "properties": {
+        "total": {
+          "type": "number",
+          "minimum": 0
+        },
+        "scope1_direct": {
+          "type": "number",
+          "minimum": 0
+        },
+        "scope2_location_based_generation": {
+          "type": "number",
+          "minimum": 0
+        },
+        "scope3_fera_location_based": {
+          "type": "number",
+          "minimum": 0
+        },
+        "embodied_it_and_network_normalized": {
+          "type": "number",
+          "minimum": 0
+        },
+        "embodied_facility_normalized": {
+          "type": "number",
+          "minimum": 0
+        },
+        "non_decomposed_provider_scope3": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "breakdownIntensity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total",
+        "scope1_direct",
+        "scope2_location_based_generation",
+        "scope3_fera_location_based",
+        "embodied_it_and_network_normalized",
+        "embodied_facility_normalized",
+        "unit"
+      ],
+      "properties": {
+        "total": {
+          "type": "number",
+          "minimum": 0
+        },
+        "scope1_direct": {
+          "type": "number",
+          "minimum": 0
+        },
+        "scope2_location_based_generation": {
+          "type": "number",
+          "minimum": 0
+        },
+        "scope3_fera_location_based": {
+          "type": "number",
+          "minimum": 0
+        },
+        "embodied_it_and_network_normalized": {
+          "type": "number",
+          "minimum": 0
+        },
+        "embodied_facility_normalized": {
+          "type": "number",
+          "minimum": 0
+        },
+        "non_decomposed_provider_scope3": {
+          "type": "number",
+          "minimum": 0
+        },
+        "unit": {
+          "type": "string",
+          "const": "kg CO2e per 1000 impressions"
+        }
+      }
+    },
+    "supplementalMetric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit"
+      ],
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0
+        },
+        "unit": {
+          "type": "string",
+          "const": "kg CO2e per 1000 impressions"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "dqi": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coverage_percent",
+        "technological_dqr",
+        "temporal_dqr",
+        "geographical_dqr",
+        "completeness_dqr",
+        "reliability_dqr"
+      ],
+      "properties": {
+        "coverage_percent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "technological_dqr": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "temporal_dqr": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "geographical_dqr": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "completeness_dqr": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "reliability_dqr": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 3
+        }
+      }
+    }
+  }
+}

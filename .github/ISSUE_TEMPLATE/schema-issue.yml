@@ -1,0 +1,49 @@
+name: Schema issue
+description: Report a schema validation or field-structure issue.
+title: "[Schema]: "
+labels:
+  - schema
+body:
+  - type: input
+    id: affected_schema_field
+    attributes:
+      label: Affected schema field
+      placeholder: "reporter.cloud_providers"
+    validations:
+      required: true
+  - type: textarea
+    id: validation_issue
+    attributes:
+      label: Validation issue
+      description: Describe the schema validation problem or ambiguity.
+    validations:
+      required: true
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected behavior
+      description: Describe what should validate or fail validation.
+    validations:
+      required: true
+  - type: textarea
+    id: actual_behavior
+    attributes:
+      label: Actual behavior
+      description: Describe what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: example_json
+    attributes:
+      label: Example JSON
+      description: Provide the smallest JSON example that demonstrates the issue.
+      render: json
+    validations:
+      required: false
+  - type: textarea
+    id: proposed_fix
+    attributes:
+      label: Proposed fix
+      description: Suggest a schema or example change, if known.
+    validations:
+      required: false

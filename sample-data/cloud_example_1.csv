@@ -1,0 +1,24 @@
+usage_year,service,region,total_lbm_emissions,total_mbm_emissions,total_scope_1_emissions_value,total_scope_2_lbm_emissions_value,total_scope_2_mbm_emissions_value,total_scope_3_lbm_emissions_value,total_scope_3_mbm_emissions_value,cfe_savings_value,model_version
+2025,Other,Asia Pacific (Tokyo),0,0,0,0,0,0,0,0,v3.0.1
+2025,Other,Asia Pacific (Seoul),0,0,0,0,0,0,0,0,v3.0.1
+2025,Other,Asia Pacific (Osaka),0,0,0,0,0,0,0,0,v3.0.1
+2025,Other,Asia Pacific (Mumbai),0,0,0,0,0,0,0,0,v3.0.1
+2025,Other,Asia Pacific (Singapore),0,0,0,0,0,0,0,0,v3.0.1
+2025,Other,Asia Pacific (Sydney),0,0,0,0,0,0,0,0,v3.0.1
+2025,Other,Canada (Central),0,0,0,0,0,0,0,0,v3.0.1
+2025,ComputeVM,Europe (Frankfurt),0.001951,0.000466,0.000011,0.001230,0,0.000710,0.000455,0.001485,v3.0.1
+2025,ObjectStorage,Europe (Frankfurt),0,0,0,0,0,0,0,0,v3.0.1
+2025,Other,Europe (Frankfurt),0.690000,0.185700,0.004200,0.410000,0,0.275800,0.181500,0.504300,v3.0.1
+2025,ObjectStorage,Europe (Stockholm),0,0,0,0,0,0,0,0,v3.0.1
+2025,Other,Europe (Stockholm),0,0,0,0,0,0,0,0,v3.0.1
+2025,Other,Europe (Ireland),0,0,0,0,0,0,0,0,v3.0.1
+2025,Other,Europe (London),0,0,0,0,0,0,0,0,v3.0.1
+2025,ComputeVM,Europe (Paris),0.016500,0.008340,0.000240,0.006800,0,0.009460,0.008100,0.008160,v3.0.1
+2025,ObjectStorage,Europe (Paris),0.141500,0.076600,0.002100,0.052400,0,0.087000,0.074500,0.064900,v3.0.1
+2025,Other,Europe (Paris),6.750000,3.354000,0.082000,2.640000,0,4.028000,3.272000,3.396000,v3.0.1
+2025,ContentDelivery,Global,0,0,0,0,0,0,0,0,v3.0.1
+2025,Other,South America (Sao Paulo),0,0,0,0,0,0,0,0,v3.0.1
+2025,Other,US East (N. Virginia),0.061000,0.009210,0.000310,0.045000,0,0.015690,0.008900,0.051790,v3.0.1
+2025,Other,US East (Ohio),0,0,0,0,0,0,0,0,v3.0.1
+2025,Other,US West (N. California),0,0,0,0,0,0,0,0,v3.0.1
+2025,Other,US West (Oregon),0,0,0,0,0,0,0,0,v3.0.1

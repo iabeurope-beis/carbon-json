@@ -1,0 +1,133 @@
+{
+  "info": {
+    "profile": "carbon.json",
+    "spec_version": "1.0.0-public-feedback",
+    "published_at": "2026-03-31T12:00:00Z",
+    "record_version": 1,
+    "reporting_period": {
+      "type": "annual",
+      "start": "2025-01-01",
+      "end": "2025-12-31"
+    }
+  },
+  "reporter": {
+    "legal_entity": "Example SSP Ltd",
+    "service_name": "Example SSP",
+    "service_variant": "all-impressions",
+    "node_class": "SSP",
+    "deployment_archetype": [
+      "public_cloud"
+    ],
+    "cloud_providers": [
+      "ExampleCloud"
+    ],
+    "geography_scope": "global",
+    "public_endpoint": "https://example.invalid/carbon-ssp.json"
+  },
+  "functional_unit": {
+    "unit": "kg CO2e per 1000 impressions",
+    "denominator_type": "reconciled_delivered_impressions",
+    "denominator_count": 200000000000
+  },
+  "results": {
+    "location_based_gross_core": {
+      "raw_value": 0.001008,
+      "published_value": 0.0012,
+      "absolute_emissions_kgco2e": {
+        "total": 201649.87,
+        "scope1_direct": 1779.393,
+        "scope2_location_based_generation": 81819.199,
+        "scope3_fera_location_based": 0,
+        "embodied_it_and_network_normalized": 0,
+        "embodied_facility_normalized": 0,
+        "non_decomposed_provider_scope3": 118051.278
+      },
+      "intensity_breakdown_kgco2e_per_1000_impressions": {
+        "total": 0.001008,
+        "scope1_direct": 0.000009,
+        "scope2_location_based_generation": 0.000409,
+        "scope3_fera_location_based": 0,
+        "embodied_it_and_network_normalized": 0,
+        "embodied_facility_normalized": 0,
+        "non_decomposed_provider_scope3": 0.00059,
+        "unit": "kg CO2e per 1000 impressions"
+      }
+    }
+  },
+  "method": {
+    "standard_refs": [
+      "carbon.json v1.0 public-feedback draft",
+      "Provider-issued infrastructure emissions output",
+      "Internal impression reconciliation controls"
+    ],
+    "boundary": "cradle-to-gate ad system infrastructure",
+    "included_categories": [
+      "servers",
+      "accelerators",
+      "storage",
+      "networking",
+      "power_distribution",
+      "cooling_mechanical",
+      "building_shell",
+      "edge_sites"
+    ],
+    "excluded_categories": [
+      "market_based_electricity",
+      "offsets_and_removals",
+      "end_of_life",
+      "corporate_overhead",
+      "end_user_devices",
+      "open_internet_not_operated"
+    ],
+    "excluded_emissions_percent": 0,
+    "allocation_methods": {
+      "compute": "customer_account_usage",
+      "facility_overhead": "provider_embedded",
+      "shared_services": "direct_usage"
+    },
+    "pue": {
+      "mode": "provider_embedded",
+      "value": null
+    },
+    "grid_factors": {
+      "accounting_method": "location_based_generation_and_fera_for_core",
+      "scope2_generation_temporal_resolution": "monthly",
+      "fera_temporal_resolution": "monthly",
+      "scope2_generation_source": "Provider-issued location-based generation factors",
+      "fera_source": "Provider-issued non-decomposed infrastructure Scope 3 value"
+    },
+    "amortization_lives_years": {
+      "it_equipment": 4,
+      "shared_network": 5,
+      "facility_shortlife": 15,
+      "facility_longlife": 20,
+      "building_shell": 25,
+      "combined_facility_default": 20
+    },
+    "source_coverage_note": "Provider-issued source data supplies Scope 1, location-based Scope 2 generation, and a non-decomposed infrastructure Scope 3 value. The full non-decomposed value is included as a conservative combined input. Embedded embodied-emissions service lives cannot be independently verified or restated from the source output."
+  },
+  "quality": {
+    "primary_data_share_percent": 95,
+    "quality_tier": "C",
+    "uncertainty_buffer_percent": 15,
+    "dqi": {
+      "coverage_percent": 100,
+      "technological_dqr": 2,
+      "temporal_dqr": 1.5,
+      "geographical_dqr": 1.5,
+      "completeness_dqr": 2,
+      "reliability_dqr": 2
+    }
+  },
+  "assurance": {
+    "assurance": false,
+    "comments": "Illustrative example only."
+  },
+  "claims": {
+    "offsets_applied": false,
+    "offsets_note": null,
+    "market_based_instruments": [],
+    "offset_programs": [],
+    "evidence_links": []
+  }
+}

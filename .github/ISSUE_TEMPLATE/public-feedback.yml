@@ -1,0 +1,81 @@
+name: Public feedback
+description: Comment on the carbon.json public-feedback draft.
+title: "[Feedback]: "
+labels:
+  - public-feedback
+body:
+  - type: dropdown
+    id: feedback_category
+    attributes:
+      label: Feedback category
+      options:
+        - Scope and boundary
+        - Functional unit
+        - Denominator
+        - FERA
+        - Embodied emissions
+        - Uncertainty buffers
+        - Data-quality tiers
+        - Cloud or colocation handling
+        - Path-level use
+        - Default factors and governance
+        - Schema usability
+        - Examples or quickstart
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: affected_section
+    attributes:
+      label: Affected section
+      description: Identify the file, section, or heading affected by this feedback.
+      placeholder: "specification.md Section 10"
+    validations:
+      required: true
+  - type: textarea
+    id: issue_or_concern
+    attributes:
+      label: Issue or concern
+      description: Describe the problem, ambiguity, or implementation concern.
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_change
+    attributes:
+      label: Proposed change
+      description: Provide proposed wording, schema changes, or a specific requested outcome.
+    validations:
+      required: false
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale
+      description: Explain why the change would improve comparability, feasibility, data quality, or clarity.
+    validations:
+      required: true
+  - type: textarea
+    id: implementation_impact
+    attributes:
+      label: Implementation impact
+      description: Describe expected impact on implementers, validators, or data users.
+    validations:
+      required: false
+  - type: dropdown
+    id: stakeholder_type
+    attributes:
+      label: Stakeholder type
+      options:
+        - Advertiser
+        - Agency
+        - Publisher
+        - DSP
+        - SSP
+        - Exchange
+        - Ad server
+        - Measurement or verification provider
+        - Infrastructure provider
+        - Sustainability practitioner
+        - Researcher
+        - Other
+    validations:
+      required: false
